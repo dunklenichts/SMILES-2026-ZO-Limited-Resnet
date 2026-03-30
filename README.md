@@ -1,7 +1,3 @@
-Here's the proofread and improved README:
-
----
-
 # Zero-Order Fine-Tuning of ResNet18 on CIFAR100
 
 ## Assignment Overview
@@ -135,3 +131,23 @@ Results are saved to the path specified by `--output`. Example:
 All accuracy values are in `[0, 1]` — multiply by 100 for percentages. Top-1 accuracy on the fine-tuned checkpoint is the sole metric used for grading.
 
 **`val_accuracy_top1_finetuned` is our main metric for this assignment.**
+
+# What is expected from the applicant of SMILES-2026 ?
+
+**Q1:** What must the applicant submit in the application form ?<br>
+**A1:** Submit: 
+1. A link to your Github repository
+
+**Q2:** What the applicants must include in the Github repository ?<br>
+**A2:** Your repository must contain: 
+1. `results.json` - produced by the official `validate.py`
+2. Report file in Markdown format `SOLUTION.md`. 
+
+**Q3:** Report requirements (`SOLUTION.md`)<br>
+**A3:** Your report must include:
+- Reproducibility instructions: exact commands to run your solution and acquire the same `results.json`, required environment (if any), any important implementation details needed to reproduce your result.
+- Final solution description: What components you modified ? What your final approach is ? Why you made these choices ? What contributed most to improving the metric ?
+- Experiments and failed attempts: What ideas you tried but did not include in the final solution ? Why they did not work or were discarded ?
+
+**Q4:** Reproducibility<br>
+**A4:** The repository must be self-contained and runnable with the provided `validate.py` evaluation script. Your solution must not require changes to the fixed files. Running `validate.py` must generate your final `results.json`. The reported metric (`val_accuracy_top1_finetuned`) in `results.json` must be reproducible using the official evaluation script. A deviation of up to ±0.5% (absolute accuracy) is allowed.
