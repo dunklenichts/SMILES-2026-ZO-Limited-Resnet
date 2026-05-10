@@ -32,6 +32,10 @@ def init_last_layer(layer: nn.Linear) -> None:
     # -------------------------------------------------------------------------
     # STUDENT: Replace or extend the initialization below.
     # -------------------------------------------------------------------------
-    nn.init.kaiming_uniform_(layer.weight, nonlinearity="relu")
+    # nn.init.kaiming_uniform_(layer.weight, nonlinearity="relu")
+    nn.init.xavier_uniform_(layer.weight)
+    # nn.init.orthogonal_(layer.weight)
+    layer.weight.data.mul_(0.01)
+    # nn.init.normal_(layer.weight, mean=0.0, std=0.01)
     nn.init.zeros_(layer.bias)
     # -------------------------------------------------------------------------
