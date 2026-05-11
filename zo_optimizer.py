@@ -300,6 +300,7 @@ class ZeroOrderOptimizer:
         """
         self.layer_names = ["fc.weight", "fc.bias"]
         # self.layer_names = ["fc.weight"]
+        # self.layer_names = ["fc.bias"]
             
         params = self._active_params()
 

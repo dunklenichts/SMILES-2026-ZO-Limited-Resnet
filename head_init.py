@@ -1,8 +1,8 @@
 """
 head_init.py — Semantic initialization for the CIFAR100 head.
 
-This version reads CIFAR100 class names from the local dataset metadata
-and uses related ImageNet classifier weights to initialize the new head.
+Instead of using only random initialization, this solution uses 
+the pretrained ImageNet classifier head from ResNet18. 
 """
 
 import os
@@ -42,7 +42,11 @@ _SEARCH_TERMS = {
 
 
 def _load_cifar100_classes() -> list[str]:
-    """Load CIFAR100 fine class names from the local dataset metadata."""
+    """Load CIFAR100 fine class names from the local dataset metadata.
+    
+    Returns:
+        A list of CIFAR100 fine class names in the official dataset order.
+    """
 
     possible_roots = [
         os.environ.get("CIFAR100_ROOT"),
@@ -61,7 +65,6 @@ def _load_cifar100_classes() -> list[str]:
                 meta = pickle.load(f, encoding="latin1")
             return meta["fine_label_names"]
 
-    # Fallback: search inside the current project folder.
     for meta_path in Path(".").glob("**/cifar-100-python/meta"):
         with open(meta_path, "rb") as f:
             meta = pickle.load(f, encoding="latin1")
@@ -74,13 +77,28 @@ def _load_cifar100_classes() -> list[str]:
 
 
 def _tokens(text: str) -> set[str]:
-    """Split a class name into simple lowercase words."""
+    """Convert a class name into a set of simple lowercase words
+
+    Args:
+        text: A class name or search phrase.
+
+    Returns:
+        A set of lowercase words.
+    """
     text = text.lower().replace("_", " ")
     return set(re.findall(r"[a-z]+", text))
 
 
 def _find_matches(categories: list[str], cifar_name: str) -> list[int]:
-    """Find ImageNet classes related to one CIFAR100 class."""
+    """Find ImageNet classes that are related to one CIFAR100 class.
+    
+    Args:
+        categories: List of ImageNet class names
+        cifar_name: Name of one CIFAR100 class
+
+    Returns:
+        A list of matching ImageNet class indices
+    """
 
     search_terms = _SEARCH_TERMS.get(
         cifar_name,
@@ -102,12 +120,10 @@ def _find_matches(categories: list[str], cifar_name: str) -> list[int]:
 
 
 def init_last_layer(layer: nn.Linear) -> None:
-    """Initialize the CIFAR100 head with related ImageNet classifier weights."""
 
-    semantic_scale = 0.25
+    semantic_scale = 0.75
 
     with torch.no_grad():
-        # Fallback for classes without ImageNet matches.
         nn.init.xavier_uniform_(layer.weight)
         layer.weight.data.mul_(0.01)
         nn.init.zeros_(layer.bias)
